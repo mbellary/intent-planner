@@ -1,0 +1,15 @@
+intent_id: intent_001
+
+kind: ForexPredictionModel
+
+spec:
+
+  dataset: eurusd_hourly
+
+  instrument: EURUSD
+
+  prediction_target: volatility
+
+  retrain_frequency: weekly
+
+  evaluation_metric: sharpe_ratio

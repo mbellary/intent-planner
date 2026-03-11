@@ -1,0 +1,5 @@
+kind: ForexPredictionModel
+training:
+  default_engine: xgboost
+compute:
+  default_engine: spark

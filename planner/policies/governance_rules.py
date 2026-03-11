@@ -1,0 +1,1 @@
+"""Governance rule definitions placeholder."""
