@@ -1,17 +1,38 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
 [project]
 name = "intent-planner"
 version = "0.1.0"
 description = "Intent Planning Engine for Deterministic AI Governance Platform"
+readme = "README.md"
 requires-python = ">=3.10"
-
 dependencies = [
-    "fastapi",
-    "pydantic",
-    "uvicorn",
-    "pyyaml",
-    "networkx",
-    "httpx"
+    "fastapi>=0.115.0",
+    "httpx>=0.28.0",
+    "networkx>=3.4",
+    "pydantic>=2.10.0",
+    "pyyaml>=6.0.2",
+    "uvicorn>=0.34.0",
 ]
 
-[tool.black]
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/planner"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
 line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]

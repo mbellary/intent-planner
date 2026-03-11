@@ -1,7 +1,10 @@
-.PHONY: run test
+.PHONY: run test lint
 
 run:
-	uvicorn planner.api.app:app --reload
+	uv run uvicorn planner.api.app:app --reload
 
 test:
-	pytest planner/tests -q
+	uv run pytest -q
+
+lint:
+	uv run ruff check .

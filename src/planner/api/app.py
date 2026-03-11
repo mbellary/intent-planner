@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from planner.api.routes import router
 
 app = FastAPI(
