@@ -1,9 +1,9 @@
-from planner.intent.normalizer import IntentNormalizer
-from planner.intent.completion import IntentCompletion
 from planner.engine.capability_resolver import CapabilityResolver
 from planner.engine.constraint_solver import ConstraintSolver
 from planner.engine.plan_generator import PlanGenerator
 from planner.engine.plan_validator import PlanValidator
+from planner.intent.completion import IntentCompletion
+from planner.intent.normalizer import IntentNormalizer
 
 
 class PlannerEngine:

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from planner.engine.planner_engine import PlannerEngine
+
 from planner.artifacts.artifact_models import IntentArtifact
+from planner.engine.planner_engine import PlannerEngine
 
 router = APIRouter()
 engine = PlannerEngine()
