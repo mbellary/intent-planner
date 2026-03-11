@@ -43,8 +43,8 @@ Allowed statuses used in this plan:
 | ID | Task | Description | Dependencies | Exit Criteria | Status |
 |---|---|---|---|---|---|
 | T00 | Scaffold review & plan initialization | Review repository structure and current baseline; initialize this execution plan with tracked statuses. | None | Review completed and documented in repo. | done |
-| T01 | Domain contract baseline | Define canonical intent/plan schemas, field semantics, required/optional rules, and versioning strategy. | T00 | Versioned schema contracts documented and represented in code models. | pending |
-| T02 | Deterministic normalization pipeline | Strengthen normalization/completion logic with deterministic defaults, ordering rules, and canonicalization. | T01 | Same input always yields identical normalized intent artifact. | pending |
+| T01 | Domain contract baseline | Define canonical intent/plan schemas, field semantics, required/optional rules, and versioning strategy. | T00 | Versioned schema contracts documented and represented in code models. | done |
+| T02 | Deterministic normalization pipeline | Strengthen normalization/completion logic with deterministic defaults, ordering rules, and canonicalization. | T01 | Same input always yields identical normalized intent artifact. | done |
 | T03 | Capability registry contract hardening | Formalize registry client interfaces, error handling, retries/timeouts, and deterministic capability snapshots. | T01 | Capability resolution is deterministic and failure modes are explicit/tested. | pending |
 | T04 | Constraint solver & policy binding | Implement rule application order, conflict resolution, and policy trace output for every constraint decision. | T02, T03 | Constraint resolution is deterministic and emits explainable policy traces. | pending |
 | T05 | Plan generation canonicalization | Build canonical plan assembly, stable sorting/serialization, and projection boundaries (if any). | T04 | Canonical plan bytes are stable for identical inputs and dependencies. | pending |
@@ -62,8 +62,8 @@ Allowed statuses used in this plan:
 
 ## 5) Current Status Snapshot
 
-- `done`: T00
-- `pending`: T01–T14
+- `done`: T00–T02
+- `pending`: T03–T14
 - `in-progress`: none
 - `blocked`: none
 - `at-risk`: none
@@ -92,4 +92,12 @@ Transition policy:
 | Date | Task ID | From | To | Notes |
 |---|---|---|---|---|
 | 2026-03-11 | T00 | pending | done | Repository scaffolding reviewed and execution plan authored/committed. |
+| 2026-03-11 | T01 | pending | in-progress | Began implementing strict, versioned intent schema contracts. |
+| 2026-03-11 | T01 | in-progress | review | Added schema-level constraints, validation guards, and version pinning. |
+| 2026-03-11 | T01 | review | validated | Added and passed schema contract tests. |
+| 2026-03-11 | T01 | validated | done | Domain contract baseline completed for intent artifacts. |
+| 2026-03-11 | T02 | pending | in-progress | Began deterministic normalization and completion hardening. |
+| 2026-03-11 | T02 | in-progress | review | Implemented canonicalization, deterministic feature ordering, and non-mutating constraint application. |
+| 2026-03-11 | T02 | review | validated | Determinism path verified by automated tests. |
+| 2026-03-11 | T02 | validated | done | Deterministic normalization pipeline finalized. |
 
