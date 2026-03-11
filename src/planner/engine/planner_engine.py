@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from planner.engine.capability_resolver import CapabilityResolver
 from planner.engine.constraint_solver import ConstraintSolver
 from planner.engine.plan_generator import PlanGenerator
@@ -7,9 +9,7 @@ from planner.intent.normalizer import IntentNormalizer
 
 
 class PlannerEngine:
-
     def __init__(self):
-
         self.normalizer = IntentNormalizer()
         self.completion = IntentCompletion()
         self.capability_resolver = CapabilityResolver()
@@ -18,17 +18,12 @@ class PlannerEngine:
         self.validator = PlanValidator()
 
     def plan(self, intent):
-
         intent = self.normalizer.normalize(intent)
-
         intent = self.completion.complete(intent)
-
         capabilities = self.capability_resolver.resolve(intent)
-
-        constrained_intent = self.constraint_solver.apply(intent, capabilities)
-
-        plan = self.generator.generate(constrained_intent, capabilities)
-
+        constrained_intent, policy_trace = self.constraint_solver.apply(
+            intent, capabilities
+        )
+        plan = self.generator.generate(constrained_intent, capabilities, policy_trace)
         self.validator.validate(plan)
-
         return plan

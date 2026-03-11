@@ -21,3 +21,4 @@ def test_planner_engine_returns_deterministic_plan():
     assert plan["dataset"] == "eurusd_hourly"
     assert plan["feature_pipeline"] == ["realized_volatility", "rolling_std"]
     assert "plan_hash" in plan
+    assert isinstance(plan["policy_trace"], list)

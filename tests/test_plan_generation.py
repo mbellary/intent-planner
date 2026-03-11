@@ -17,7 +17,11 @@ def test_plan_generation_includes_hash_and_metric():
         ),
     )
 
-    plan = generator.generate(intent, capabilities={})
+    plan = generator.generate(
+        intent,
+        capabilities={"training_engines": ["xgboost"], "compute": ["spark"]},
+        policy_trace=[],
+    )
 
     assert plan["evaluation"]["metric"] == "sharpe_ratio"
     assert len(plan["plan_hash"]) == 64
