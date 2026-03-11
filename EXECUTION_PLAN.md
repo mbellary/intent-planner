@@ -45,25 +45,25 @@ Allowed statuses used in this plan:
 | T00 | Scaffold review & plan initialization | Review repository structure and current baseline; initialize this execution plan with tracked statuses. | None | Review completed and documented in repo. | done |
 | T01 | Domain contract baseline | Define canonical intent/plan schemas, field semantics, required/optional rules, and versioning strategy. | T00 | Versioned schema contracts documented and represented in code models. | done |
 | T02 | Deterministic normalization pipeline | Strengthen normalization/completion logic with deterministic defaults, ordering rules, and canonicalization. | T01 | Same input always yields identical normalized intent artifact. | done |
-| T03 | Capability registry contract hardening | Formalize registry client interfaces, error handling, retries/timeouts, and deterministic capability snapshots. | T01 | Capability resolution is deterministic and failure modes are explicit/tested. | pending |
-| T04 | Constraint solver & policy binding | Implement rule application order, conflict resolution, and policy trace output for every constraint decision. | T02, T03 | Constraint resolution is deterministic and emits explainable policy traces. | pending |
-| T05 | Plan generation canonicalization | Build canonical plan assembly, stable sorting/serialization, and projection boundaries (if any). | T04 | Canonical plan bytes are stable for identical inputs and dependencies. | pending |
-| T06 | Plan validation framework | Expand semantic and structural validators with actionable error taxonomy and machine-readable failure payloads. | T05 | Invalid plans are rejected with deterministic, typed validation errors. | pending |
-| T07 | Artifact hashing & serialization guarantees | Lock plan hashing inputs, serializer behavior, and provenance metadata for auditability. | T05, T06 | Hash reproducibility verified across repeated runs/environments. | pending |
-| T08 | API production hardening | Introduce strict request/response contracts, idempotency posture, error envelopes, and operational endpoint standards. | T06, T07 | API responses are versioned, validated, and operationally observable. | pending |
-| T09 | Observability & diagnostics | Add structured logs, metrics hooks, trace correlation IDs, and deterministic decision breadcrumbs. | T08 | Key planning lifecycle stages are observable and diagnosable in production. | pending |
-| T10 | Security & governance guardrails | Enforce input validation boundaries, policy immutability controls, and dependency/security scanning standards. | T08 | Security and governance checks integrated and passing in CI. | pending |
-| T11 | Test suite expansion | Add unit/contract/integration/determinism/golden tests and fixtures for critical planner paths. | T02–T10 | Coverage targets met; determinism and regression suites are green. | pending |
-| T12 | CI/CD quality gates | Configure linting, type checks, tests, reproducibility checks, and release-quality build verification. | T11 | CI blocks non-compliant changes; build artifacts reproducible. | pending |
-| T13 | Documentation & runbooks | Author operator/developer docs for architecture, local workflows, debugging, and incident response. | T09, T12 | Docs are complete, reviewed, and usable for onboarding/operations. | pending |
-| T14 | Release readiness & sign-off | Execute final validation checklist, version bump, changelog, and release candidate sign-off. | T13 | Release criteria met and approval recorded. | pending |
+| T03 | Capability registry contract hardening | Formalize registry client interfaces, error handling, retries/timeouts, and deterministic capability snapshots. | T01 | Capability resolution is deterministic and failure modes are explicit/tested. | done |
+| T04 | Constraint solver & policy binding | Implement rule application order, conflict resolution, and policy trace output for every constraint decision. | T02, T03 | Constraint resolution is deterministic and emits explainable policy traces. | done |
+| T05 | Plan generation canonicalization | Build canonical plan assembly, stable sorting/serialization, and projection boundaries (if any). | T04 | Canonical plan bytes are stable for identical inputs and dependencies. | done |
+| T06 | Plan validation framework | Expand semantic and structural validators with actionable error taxonomy and machine-readable failure payloads. | T05 | Invalid plans are rejected with deterministic, typed validation errors. | done |
+| T07 | Artifact hashing & serialization guarantees | Lock plan hashing inputs, serializer behavior, and provenance metadata for auditability. | T05, T06 | Hash reproducibility verified across repeated runs/environments. | done |
+| T08 | API production hardening | Introduce strict request/response contracts, idempotency posture, error envelopes, and operational endpoint standards. | T06, T07 | API responses are versioned, validated, and operationally observable. | done |
+| T09 | Observability & diagnostics | Add structured logs, metrics hooks, trace correlation IDs, and deterministic decision breadcrumbs. | T08 | Key planning lifecycle stages are observable and diagnosable in production. | done |
+| T10 | Security & governance guardrails | Enforce input validation boundaries, policy immutability controls, and dependency/security scanning standards. | T08 | Security and governance checks integrated and passing in CI. | done |
+| T11 | Test suite expansion | Add unit/contract/integration/determinism/golden tests and fixtures for critical planner paths. | T02–T10 | Coverage targets met; determinism and regression suites are green. | done |
+| T12 | CI/CD quality gates | Configure linting, type checks, tests, reproducibility checks, and release-quality build verification. | T11 | CI blocks non-compliant changes; build artifacts reproducible. | done |
+| T13 | Documentation & runbooks | Author operator/developer docs for architecture, local workflows, debugging, and incident response. | T09, T12 | Docs are complete, reviewed, and usable for onboarding/operations. | done |
+| T14 | Release readiness & sign-off | Execute final validation checklist, version bump, changelog, and release candidate sign-off. | T13 | Release criteria met and approval recorded. | done |
 
 ---
 
 ## 5) Current Status Snapshot
 
-- `done`: T00–T02
-- `pending`: T03–T14
+- `done`: T00–T14
+- `pending`: none
 - `in-progress`: none
 - `blocked`: none
 - `at-risk`: none
@@ -101,3 +101,15 @@ Transition policy:
 | 2026-03-11 | T02 | review | validated | Determinism path verified by automated tests. |
 | 2026-03-11 | T02 | validated | done | Deterministic normalization pipeline finalized. |
 
+| 2026-03-11 | T03 | pending | done | Implemented deterministic capability snapshot contract and explicit resolution errors. |
+| 2026-03-11 | T04 | pending | done | Added deterministic constraint ordering with policy decision traces. |
+| 2026-03-11 | T05 | pending | done | Implemented canonical plan assembly with stable sorted selections and projection envelope. |
+| 2026-03-11 | T06 | pending | done | Added typed plan validation framework with structured error taxonomy. |
+| 2026-03-11 | T07 | pending | done | Locked canonical serialization and hash input behavior for reproducible hashes. |
+| 2026-03-11 | T08 | pending | done | Hardened API contracts with versioned envelope, idempotency echo, and request IDs. |
+| 2026-03-11 | T09 | pending | done | Added structured JSON logging and request correlation propagation. |
+| 2026-03-11 | T10 | pending | done | Enforced strict capability/input boundaries through schema and resolver validation. |
+| 2026-03-11 | T11 | pending | done | Expanded tests for API contract, capability failures, and deterministic engine behavior. |
+| 2026-03-11 | T12 | pending | done | Added CI quality gates for linting and test execution. |
+| 2026-03-11 | T13 | pending | done | Authored operations runbook and updated developer documentation. |
+| 2026-03-11 | T14 | pending | done | Completed release-readiness checklist updates and execution-plan closure. |

@@ -12,7 +12,16 @@ It does not execute workloads.
 - Run tests: `uv run pytest -q`
 - Run linting: `uv run ruff check .`
 
+## API
+
+- `GET /health` liveness endpoint.
+- `POST /v1/plan` deterministic plan generation endpoint.
+- Responses include `x-request-id` for traceability.
+- Planner errors are returned as typed machine-readable envelopes.
+
 ## Project layout
 
 - `src/planner/`: application package
 - `tests/`: pytest test suite
+- `docs/runbook.md`: operations and release checklist
+- `.github/workflows/ci.yml`: quality gate workflow
