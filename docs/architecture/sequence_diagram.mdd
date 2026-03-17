@@ -1,0 +1,170 @@
+sequenceDiagram
+    autonumber
+
+    actor U as User / API Client
+    participant API as Intent-Planner API
+    participant ING as Request Ingestor
+    participant CONV as Conversation Manager
+    participant EX as Intent Extractor
+    participant MAP as Schema Mapper
+    participant NORM as Intent Normalizer
+    participant COMP as Completion Engine
+    participant CLAR as Clarification Engine
+    participant IVAL as Intent Validator
+    participant ILB as IL Builder
+    participant SDKV as Platform-SDK Validator Adapter
+    participant SDKC as Platform-SDK Canonicalization Adapter
+    participant ART as Artifact Service
+    participant CS as Capability Snapshot Loader
+    participant PB as Policy Bundle Loader
+    participant PIN as Planning Intent Normalizer
+    participant CE as Constraint Engine
+    participant TS as Template Selector
+    participant PG as Plan Generator
+    participant DGR as Dependency Graph Resolver
+    participant PV as Resolved Plan Validator
+    participant PKG as Resolved Plan Packager
+    participant ID as SDK Identity Adapter
+    participant SUM as Summary Generator
+    participant DIAG as Diagnostics Service
+    participant REV as Approval Service
+    participant REG as Artifact Registry
+    participant CP as Control-Plane API
+
+    U->>API: Submit planning request
+    API->>ING: ingest(request envelope, auth context, idempotency key)
+    ING->>ART: persist RequestArtifact
+    ART-->>ING: request_artifact_id
+    ING-->>API: normalized request context
+
+    API->>CONV: load/create conversation state
+    CONV-->>API: conversation context
+
+    API->>EX: extract draft intent from user input + conversation context
+    EX-->>API: DraftIntent
+    API->>MAP: map extracted intent to domain/service schema
+    MAP-->>API: mapped draft intent
+    API->>NORM: normalize fields, aliases, units, defaults
+    NORM-->>API: normalized draft intent
+    API->>COMP: detect missing required fields / unresolved slots
+    COMP-->>API: completion report
+
+    alt Clarification required
+        API->>CLAR: generate clarification questions
+        CLAR-->>API: clarification prompts
+        API-->>U: ask for clarification
+        U->>API: clarification response
+        API->>CONV: append clarification turn / resolved parameters
+        CONV-->>API: updated conversation context
+        API->>EX: re-extract with updated context
+        EX-->>API: revised DraftIntent
+        API->>MAP: re-map
+        MAP-->>API: revised mapped draft intent
+        API->>NORM: re-normalize
+        NORM-->>API: revised normalized draft intent
+        API->>COMP: re-check completeness
+        COMP-->>API: completion satisfied
+    end
+
+    API->>IVAL: validate intent (semantic, policy pre-checks, capability pre-checks)
+    IVAL-->>API: validation result
+
+    alt Intent invalid
+        API->>DIAG: build structured error envelope + remediation hints
+        DIAG-->>API: error response
+        API-->>U: validation failure
+    else Intent valid
+        API->>ILB: build Intent Language artifact
+        ILB-->>API: IL candidate
+        API->>SDKV: validate IL against platform-sdk contracts
+        SDKV-->>API: IL contract validation result
+
+        alt IL contract invalid
+            API->>DIAG: build IL validation error envelope
+            DIAG-->>API: error response
+            API-->>U: IL validation failure
+        else IL contract valid
+            API->>SDKC: canonicalize IL using SDK rules
+            SDKC-->>API: canonical IL
+            API->>ART: persist IntentArtifact / IL Artifact
+            ART-->>API: intent_artifact_id
+
+            API->>CS: load versioned CapabilitySnapshot
+            CS-->>API: CapabilitySnapshot
+            API->>PB: load versioned PolicyBundle
+            PB-->>API: PolicyBundle
+
+            API->>PIN: normalize IL into planner-facing normalized intent
+            PIN-->>API: PlanningIntent
+            API->>CE: evaluate constraints against PlanningIntent + CapabilitySnapshot + PolicyBundle
+            CE-->>API: constraint decisions
+
+            alt Constraint violation
+                API->>DIAG: build policy/constraint diagnostics
+                DIAG-->>API: error response
+                API-->>U: planning failure
+            else Constraints satisfied
+                API->>TS: resolve deterministic plan templates
+                TS-->>API: selected templates
+                API->>PG: generate plan package candidates
+                Note over PG: Quant / Cloud / Compute / Analysis /\nOperators / Observability / Explainability /\nCompiler Directives / Task
+                PG-->>API: candidate plan package
+
+                API->>DGR: resolve inter-plan dependencies
+                DGR-->>API: dependency graph + ordered plan package
+
+                API->>PV: validate resolved plan package
+                PV->>SDKV: validate final resolved plan against platform-sdk contract
+                SDKV-->>PV: contract validation result
+                PV-->>API: resolved plan validation result
+
+                alt Resolved plan invalid
+                    API->>DIAG: build plan validation diagnostics
+                    DIAG-->>API: error response
+                    API-->>U: plan validation failure
+                else Resolved plan valid
+                    API->>PKG: assemble canonical ResolvedPlanArtifact
+                    PKG-->>API: resolved plan artifact candidate
+                    API->>ID: compute artifact identity using SDK-owned hashing/canonicalization policy
+                    ID-->>API: resolved_plan_hash / artifact identity
+
+                    API->>SUM: generate human-readable summary + rationale + alternatives rejected
+                    SUM-->>API: PlanSummaryArtifact
+
+                    API->>ART: persist CapabilitySnapshot, PolicyBundle, ResolvedPlanArtifact, SummaryArtifact, DiagnosticsArtifact
+                    ART->>REG: register immutable artifacts + lineage
+                    REG-->>ART: registration status
+                    ART-->>API: artifact references
+
+                    alt Approval required
+                        API->>REV: create review packet / approval state
+                        REV-->>API: review request created
+                        API-->>U: summary + plan for approve/modify/reject
+
+                        alt User approves
+                            U->>API: approve plan
+                            API->>REV: mark approved
+                            REV-->>API: approval confirmed
+                            API->>CP: submit ResolvedPlanArtifact only
+                            CP-->>API: handoff accepted
+                            API-->>U: approved + handed off
+                        else User requests modification / clarification
+                            U->>API: modify / clarify request
+                            API->>CONV: append modification turn
+                            CONV-->>API: updated conversation context
+                            API-->>U: replanning started from updated context
+                        else User rejects
+                            U->>API: reject plan
+                            API->>REV: mark rejected
+                            REV-->>API: rejection stored
+                            API-->>U: plan rejected
+                        end
+                    else Auto-approved
+                        API->>CP: submit ResolvedPlanArtifact only
+                        CP-->>API: handoff accepted
+                        API-->>U: resolved plan created + handed off
+                    end
+                end
+            end
+        end
+    end
