@@ -728,6 +728,7 @@ intent-planner/
 │       │   │   ├── explanation.py
 │       │   │   ├── approvals.py
 │       │   │   ├── artifacts.py
+│       │   │   ├── clarification.py
 │       │   │   └── admin.py
 │       │   ├── request_models/
 │       │   │   ├── planning_requests.py
@@ -955,11 +956,13 @@ intent-planner/
 │       │   │   ├── resolved_plan_semantic_validator.py
 │       │   │   ├── resolved_plan_business_invariants.py
 │       │   │   ├── resolved_plan_sdk_contract_guard.py
+│       │   │   ├── resolved_plan_sdk_validator_adapter.py
 │       │   │   └── policy_post_validator.py
 │       │   ├── packaging/
 │       │   │   ├── resolved_plan_builder.py
 │       │   │   ├── package_assembler.py
 │       │   │   ├── sdk_canonicalization_adapter.py
+│       │   │   ├── resolved_plan_sdk_projection.py
 │       │   │   └── sdk_identity_adapter.py
 │       │   └── summary/
 │       │       ├── summary_generator.py
@@ -1580,7 +1583,29 @@ plan_hash = hash(
 
 ---
 
-## 22. Final Architectural Statement
+## 22. Architecture Validation Checklist
+
+### Architectural consistency checks
+
+* Is IL the only boundary between interpretation and planning?
+* Is planning fully deterministic and free of LLM/runtime randomness?
+* Is compiler meaning clearly defined inside `intent-planner`?
+* Are runtime concerns excluded from `intent-planner`?
+
+### Repository consistency checks
+
+* Are all canonical schemas owned by `platform-sdk`?
+* Does `intent-planner` only consume SDK contracts?
+* Are `control-plane` imports one-way and read-only from planner outputs?
+* Are hashing/canonicalization/version policies centralized in SDK?
+
+### MVP consistency checks
+
+* What is the minimal artifact set?
+* What exact API responses are returned by planner?
+* What is deferred from MVP: clarification loop, human approval, compiler plan, service plan?
+
+## 23. Final Architectural Statement
 
 Intent-Planner is a **compiler-grade subsystem** with:
 
@@ -1592,7 +1617,7 @@ Intent-Planner is a **compiler-grade subsystem** with:
 
 ---
 
-## 23. Non-Negotiable Rules
+## 24. Non-Negotiable Rules
 
 1. Planning NEVER consumes raw natural language
 2. LLMs NEVER decide infrastructure
