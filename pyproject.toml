@@ -1,0 +1,4 @@
+[tool.poetry]
+name = "intent-planner"
+version = "0.1.0"
+description = "Intent planner scaffold"
